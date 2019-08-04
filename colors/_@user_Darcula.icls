@@ -1,0 +1,13 @@
+<scheme name="_@user_Darcula" version="142" parent_scheme="Darcula">
+  <option name="FONT_SCALE" value="1.0" />
+  <metaInfo>
+    <property name="created">2019-01-14T20:11:28</property>
+    <property name="ide">PyCharmCore</property>
+    <property name="ideVersion">2018.3.1.0.0</property>
+    <property name="modified">2019-01-14T20:13:34</property>
+    <property name="originalScheme">Darcula</property>
+  </metaInfo>
+  <option name="LINE_SPACING" value="1.0" />
+  <option name="EDITOR_FONT_SIZE" value="16" />
+  <option name="EDITOR_FONT_NAME" value="Monospaced" />
+</scheme>
