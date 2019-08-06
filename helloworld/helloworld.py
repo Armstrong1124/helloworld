@@ -45,5 +45,4 @@ def print_tree(x):
             print_tree(x.r_child)
 
 
-b = a.root
-print_tree(b)
+print_tree(a.root)
