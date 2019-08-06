@@ -46,3 +46,4 @@ def print_tree(x):
 
 
 print_tree(a.root)
+print("test")
