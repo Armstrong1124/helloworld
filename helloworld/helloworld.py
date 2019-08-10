@@ -1,49 +1,17 @@
-class Node(object):
-
-    def __init__(self, data=None, l_child=None, r_child=None):
-        self.data = data
-        self.l_child = l_child
-        self.r_child = r_child
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 
 
-class BinaryTree(object):
+# numpy类似列表append功能
+a = np.array(range(10)).reshape((5, 2))
+small = a[:2]
+print(small)
+for i in a[2:]:
+    small = np.row_stack((small[1:], i))
+    print(small)
 
-    def __init__(self, node=None):
-        self.root = node
-
-    def add(self, item=None):
-        node = Node(item)
-        if not self.root:
-            self.root = node
-        else:
-            node_queue = list()
-            node_queue.append(self.root)
-            while 1:
-                cur_node = node_queue.pop(0)
-                if not cur_node.l_child:
-                    cur_node.l_child = node
-                    return
-                elif not cur_node.r_child:
-                    cur_node.r_child = node
-                    return
-                else:
-                    node_queue.append(cur_node.l_child)
-                    node_queue.append(cur_node.r_child)
-
-
-a = BinaryTree()
-for i in range(10):
-    a.add(i)
-
-
-def print_tree(x):
-    if x.data is not None:
-        print(x.data)
-        if x.l_child:
-            print_tree(x.l_child)
-        if x.r_child:
-            print_tree(x.r_child)
-
-
-print_tree(a.root)
-print("test")
+# DataFrame更改列名
+a = pd.DataFrame(np.zeros((3, 4)), columns=list("ABCD"))
+a.rename(columns={"A": "G"}, inplace=True)
+print(a)
