@@ -1,10 +1,9 @@
-from numpy import mat, dot, zeros, diag
-from numpy.linalg import svd, inv
+import numpy as np
+from helloworld import *
 
-a = mat([[1, 2], [3, 4], [5, 6]])
-print(a)
-u, s, v = svd(a)
-sigma = zeros(a.shape)
-sigma[:a.shape[1], :a.shape[1]] = diag(s)
-b = u*sigma*v
-print(b)
+
+r = np.mat(np.random.randn(3, 3))
+# print(r)
+x = np.mat(np.random.randint(1, 10, (6, 3)))
+# print(x)
+print(22222)
