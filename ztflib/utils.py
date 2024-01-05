@@ -52,3 +52,34 @@ def django_cmd():
     :return:
     '''
     pass
+
+
+def coordinate_transformation1(x, y):
+    import numpy as np
+    x = np.mat(x)
+    y = np.mat(y)
+    center_x = np.mean(x, axis=0)
+    center_y = np.mean(y, axis=0)
+    re_x = x - center_x
+    re_y = y - center_y
+    h = re_x.T*re_y
+    u, s, vt = np.linalg.svd(h)
+    r = vt.T*u.T
+    if np.linalg.det(r) < 0:
+        vt[2, :] *= -1
+        r = vt.T*u.T
+    t = -r*center_x.T + center_y.T
+    return r, t
+
+
+def coordinate_transformation2(x, y):
+    import numpy as np
+    x = np.mat(x)
+    y = np.mat(y)
+    center_x = np.mean(x, axis=0)
+    center_y = np.mean(y, axis=0)
+    re_x = x - center_x
+    re_y = y - center_y
+    r = np.linalg.inv(re_x.T*re_x)*re_x.T*re_y
+    t = -r*center_x.T + center_y.T
+    return r, t
