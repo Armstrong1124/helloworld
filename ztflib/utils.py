@@ -1,3 +1,6 @@
+import os.path
+import time
+
 def set_pandas_option():
     import pandas as pd
     # 显示所有列
@@ -8,8 +11,29 @@ def set_pandas_option():
     pd.set_option('display.width', 1000)
 
 
+def some_useful_func_import_from():
+    from functools import partial
+    from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
+    from collections import defaultdict, namedtuple, OrderedDict
+    pass
+
+
+def time_cost(logger):
+    def _time_cost(func):
+        def __time_cost(*args):
+            start = time.time()
+            func(*args)
+            logger.info(f'{func.__name__} time cost {time.time() - start}s')
+        return __time_cost
+    return _time_cost
+
+
+
 def get_logger():
+    import os
     import logging
+    from logging.handlers import TimedRotatingFileHandler
+    from datetime import datetime
     lg = logging.getLogger()
     lg.setLevel(logging.INFO)
     console_handler = logging.StreamHandler()
@@ -17,6 +41,14 @@ def get_logger():
     formatter = logging.Formatter('[%(asctime)s-line%(lineno)d-%(levelname)s]: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
     console_handler.setFormatter(formatter)
     lg.addHandler(console_handler)
+
+    now = datetime.now()
+    now = now.strftime('%Y-%m-%d-%H-%M-%S')
+    os.makedirs('log', exist_ok=True)
+    file_handler = logging.FileHandler(f'log/{now}.log')
+    file_handler.setLevel(logging.INFO)
+    file_handler.setFormatter(formatter)
+    lg.addHandler(file_handler)
     return lg
 
 
@@ -83,3 +115,20 @@ def coordinate_transformation2(x, y):
     r = np.linalg.inv(re_x.T*re_x)*re_x.T*re_y
     t = -r*center_x.T + center_y.T
     return r, t
+
+
+def sql_insert_del_update_select():
+    from sqlalchemy import create_engine, MetaData
+    from sqlalchemy.orm import sessionmaker
+    import pandas as pd
+    engine = create_engine('mysql+pymysql://radar_data:123@10.44.23.121:3306/test')
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    metadata = MetaData()
+    metadata.reflect(bind=engine)
+    curr_table = metadata.tables['data_base_remote_66ms_pc2']
+    res = session.query(curr_table).filter(curr_table.c.autopilot_status == '12').update({'scene_types': '777'})
+    session.commit()
+    session.close()
+    sql = 'SELECT * FROM test.data_base_remote_66ms_pc2;'
+    data = pd.read_sql(sql, engine)
