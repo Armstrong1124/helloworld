@@ -1,6 +1,11 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <fstream>
+#include <iostream>
+#include <sstream>
 
 std::vector<std::string> split(const std::string &str, const char &delimiter) {
   std::vector<std::string> tokens;
@@ -15,7 +20,7 @@ std::vector<std::string> split(const std::string &str, const char &delimiter) {
 }
 
 
-bool endsWith(const std::string &str, const std::string suffix) {
+bool endsWith(const std::string &str, const std::string &suffix) {
   if (suffix.length() > str.length()) {
     return false;
   }
@@ -23,21 +28,21 @@ bool endsWith(const std::string &str, const std::string suffix) {
 }
 
 bool startsWith(const std::string &str,
-                              const std::string suffix) {
+                              const std::string &suffix) {
   if (suffix.length() > str.length()) {
     return false;
   }
   return (str.find(suffix) == 0);
 }
 
-std::string rstrip(std::string str, const std::string delimiter) {
+std::string rstrip(std::string str, const std::string &delimiter) {
   while (endsWith(str, delimiter)) {
     str = str.substr(0, str.size() - delimiter.size());
   }
   return str;
 }
 
-std::string lstrip(std::string str, const std::string delimiter) {
+std::string lstrip(std::string str, const std::string &delimiter) {
   while (startsWith(str, delimiter)) {
     str = str.substr(delimiter.size());
   }
@@ -104,4 +109,22 @@ std::vector<double> eulerToQuaternion(EulerAngle angles) {
   y = sy * cp * sr + cy * sp * cr;
   z = sy * cp * cr - cy * sp * sr;
   return {w, x, y, z};
+}
+
+bool creatNewFolder(const std::string &folder_name) {
+    auto layers = split(folder_name, '/');
+    std::string root;
+    if(folder_name[0] == '/')root = "";
+    else root = ".";
+    bool flag = false;
+    for(auto layer: layers){
+      if(layer == "")continue;
+      root += "/" + layer;
+      if (access(root.c_str(), 0) == -1){
+          if (mkdir(root.c_str(), S_IRWXU | S_IRWXG | S_IRWXO) == -1)continue;
+          else flag = true;
+      }
+    }
+    if (!flag)std::cout << "fail to creat new folder " << folder_name << std::endl;
+    return flag;
 }
