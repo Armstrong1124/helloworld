@@ -110,6 +110,7 @@ std::vector<double> eulerToQuaternion(EulerAngle angles) {
   z = sy * cp * cr - cy * sp * sr;
   return {w, x, y, z};
 }
+bool fileExists(const std::string &file_name) { return access(file_name.c_str(), F_OK) != -1; }
 
 bool creatNewFolder(const std::string &folder_name) {
     auto layers = split(folder_name, '/');
@@ -127,4 +128,21 @@ bool creatNewFolder(const std::string &folder_name) {
     }
     if (!flag)std::cout << "fail to creat new folder " << folder_name << std::endl;
     return flag;
+}
+
+std::string pathJoin(const std::vector<std::string> &vec)
+{
+    std::string result_path;
+    std::string delimiter = "/";
+    for (int i = 0; i < vec.size(); ++i)
+    {
+        std::string curr_dir = rstrip(vec[i], delimiter);
+        if (i > 0)
+        {
+            result_path += delimiter;
+            curr_dir = lstrip(curr_dir, delimiter);
+        }
+        result_path += curr_dir;
+    }
+    return result_path;
 }
