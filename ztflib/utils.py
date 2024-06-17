@@ -1,6 +1,12 @@
 import os.path
 import time
 
+
+'''
+pyinstaller --hidden-import=matplotlib.backends.backend_tkagg --onefile main.py
+'''
+
+
 def set_pandas_option():
     import pandas as pd
     # 显示所有列
