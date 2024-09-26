@@ -146,3 +146,42 @@ std::string pathJoin(const std::vector<std::string> &vec)
     }
     return result_path;
 }
+
+geometry_msgs::Quaternion eulerToQuaternion(const float& yaw, const float& pitch = 0, const float& roll = 0)
+{
+    geometry_msgs::Quaternion quaternion;
+
+    double thetaYaw   = yaw * 0.5;
+    double thetaPitch = pitch * 0.5;
+    double thetaRoll  = roll * 0.5;
+
+    // 计算三个轴的正弦和余弦值
+    double cy = cos(thetaYaw);
+    double sy = sin(thetaYaw);
+    double cp = cos(thetaPitch);
+    double sp = sin(thetaPitch);
+    double cr = cos(thetaRoll);
+    double sr = sin(thetaRoll);
+
+    // 计算四元数的四个分量
+    quaternion.w = cy * cp * cr + sy * sp * sr;
+    quaternion.x = cy * cp * sr - sy * sp * cr;
+    quaternion.y = sy * cp * sr + cy * sp * cr;
+    quaternion.z = sy * cp * cr - cy * sp * sr;
+
+    return quaternion;
+}
+
+void calCornerPoint(
+    geometry_msgs::Point& res_point, const geometry_msgs::Point& tmp_point, const geometry_msgs::Point& center_point,
+    const geometry_msgs::Quaternion& q)
+{
+    res_point.x = tmp_point.x * (q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z) +
+                  tmp_point.y * 2 * (q.x * q.y - q.w * q.z) + tmp_point.z * 2 * (q.w * q.y + q.x * q.z) +
+                  center_point.x;
+    res_point.y = tmp_point.x * 2 * (q.w * q.z + q.x * q.y) +
+                  tmp_point.y * (q.w * q.w - q.x * q.x + q.y * q.y - q.z * q.z) +
+                  tmp_point.z * 2 * (q.y * q.z - q.w * q.x) + center_point.y;
+    res_point.z = tmp_point.x * 2 * (q.x * q.z - q.w * q.y) + tmp_point.y * 2 * (q.w * q.x + q.y * q.z) +
+                  tmp_point.z * (q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z) + center_point.z;
+}
